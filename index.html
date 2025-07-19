@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edannoir & Kristine - Wedding Invitation</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-content">
+            <div class="loading-hearts">
+                <i class="fas fa-heart"></i>
+                <i class="fas fa-heart"></i>
+                <i class="fas fa-heart"></i>
+            </div>
+            <p>Loading our special day...</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">E & K</div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#details" class="nav-link">Details</a></li>
+                <li><a href="#love-timeline" class="nav-link">Our Story</a></li>
+                <li><a href="#rsvp" class="nav-link">RSVP</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <img src="Assests/intro.jpg" alt="Edannoir and Kristine" class="hero-image">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="name">Edannoir</span>
+                    <span class="and">&</span>
+                    <span class="name">Kristine</span>
+                </h1>
+                <p class="hero-subtitle">Are getting married</p></div>
+                <div class="hero-countdown">
+                    <h3 class="countdown-title">Countdown to Our Special Day</h3>
+                    <div class="countdown-timer">
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="hero-countdown-days">20</div>
+                            <div class="countdown-label">DAYS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="hero-countdown-hours">11</div>
+                            <div class="countdown-label">HOURS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="hero-countdown-minutes">41</div>
+                            <div class="countdown-label">MINUTES</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="hero-countdown-seconds">04</div>
+                            <div class="countdown-label">SECONDS</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-buttons">
+                    <button class="btn-primary" onclick="scrollToSection('details')">View Details</button>
+                    <button class="btn-secondary" onclick="scrollToSection('rsvp')">RSVP Now</button>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Section Divider -->
+    <div class="section-divider">
+        <div class="ornate-divider">
+            <div class="scroll-left">
+                <div class="leaf"></div>
+            </div>
+            <div class="central-motif"></div>
+            <div class="scroll-right">
+                <div class="leaf"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wedding Details Section -->
+    <section id="details" class="details">
+        <div class="container">
+            <h2 class="section-title">Wedding Details</h2>
+            <div class="invitation-suite">
+                <!-- Date Card -->
+                <div class="invitation-card info-card date-card">
+                    <div class="floral-decoration top-left"></div>
+                    <div class="card-content">
+                        <div class="invitation-header">
+                            <h2 class="month">AUGUST</h2>
+                            <div class="divider-line"></div>
+                        </div>
+                        
+                        <div class="date-time-block">
+                            <span class="day-name">FRIDAY</span>
+                            <span class="date-number">09</span>
+                            <span class="time">AT 3:00 PM</span>
+                        </div>
+                        
+                        <div class="divider-line"></div>
+                        <div class="year">2025</div>
+                    </div>
+                </div>
+                
+                <!-- Venue Card -->
+                <div class="invitation-card info-card venue-card">
+                    <div class="floral-decoration bottom-right"></div>
+                    <div class="card-content">
+                        <div class="venue-section">
+                            <p class="see-you-at">See you at</p>
+                            <h3 class="venue-name">SUNDAZE FARM</h3>
+                            <div class="divider-line"></div>
+                            <div class="reception-info">
+                                <p class="reception-follow">Reception to follow</p>
+                                <p class="reception-time">at 5:00 PM</p>
+                            </div>
+                            <div class="map-link">
+                                <a href="https://www.google.com/maps/place/Sundaze+Farm/@10.1523016,123.6074319,17z/data=!3m1!4b1!4m6!3m5!1s0x33a963ed8cbfb45b:0xfe60aba546d420e3!8m2!3d10.1523016!4d123.6074319!16s%2Fg%2F11h0sp589x?authuser=0&entry=ttu&g_ep=EgoyMDI1MDcxNi4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="map-button">View Map & Directions</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dress Code Card -->
+                <div class="invitation-card info-card date-card">
+                    <div class="floral-decoration top-left"></div>
+                    <div class="card-content">
+                        <div class="invitation-header">
+                            <h2 class="month">DRESS CODE</h2>
+                            <div class="divider-line"></div>
+                        </div>
+                        
+                        <div class="color-palette">
+                            <div class="color-swatch">
+                                <div class="color-circle deep-brown" style="background-color: #734214;"></div>
+                            </div>
+                            <div class="color-swatch">
+                                <div class="color-circle soft-beige" style="background-color: #f4e8d1;"></div>
+                            </div>
+                            <div class="color-swatch">
+                                <div class="color-circle burnt-orange" style="background-color: #c25d2e;"></div>
+                            </div>
+                            <div class="color-swatch">
+                                <div class="color-circle pale-cream" style="background-color: #f5f5de;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="divider-line"></div>
+                        <div class="year">AUTUMN ELEGANCE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Divider -->
+    <div class="section-divider">
+        <div class="ornate-divider">
+            <div class="scroll-left">
+                <div class="leaf"></div>
+            </div>
+            <div class="central-motif"></div>
+            <div class="scroll-right">
+                <div class="leaf"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Our Love Story Timeline Section -->
+    <section id="love-timeline" class="love-timeline">
+        <div class="container">
+            <h2 class="section-title">Our Love Story</h2>
+            <p class="timeline-subtitle">Follow the timeline</p>
+            
+            <div class="timeline-container">
+                <div class="timeline-hearts">
+                    <div class="heart-item active" data-year="2016">
+                        <i class="fas fa-heart"></i>
+                        <span class="year-label">The Beginning</span>
+                    </div>
+                    <div class="heart-item" data-year="2017">
+                        <i class="fas fa-heart"></i>
+                        <span class="year-label">Growing Together</span>
+                    </div>
+                    <div class="heart-item" data-year="2018">
+                        <i class="fas fa-heart"></i>
+                        <span class="year-label">The Journey Begins</span>
+                    </div>
+                    <div class="heart-item" data-year="2019">
+                        <i class="fas fa-heart"></i>
+                        <span class="year-label">Love Grows</span>
+                    </div>
+                    <div class="heart-item" data-year="2020">
+                        <i class="fas fa-heart"></i>
+                        <span class="year-label">Distance & Growth</span>
+                    </div>
+                    <div class="heart-item" data-year="2023">
+                        <i class="fas fa-heart"></i>
+                        <span class="year-label">A Beautiful Blessing</span>
+                    </div>
+                    <div class="heart-item" data-year="2025">
+                        <i class="fas fa-heart"></i>
+                        <span class="year-label">Forever Begins</span>
+                    </div>
+                </div>
+                
+                <div class="timeline-content">
+                    <div class="timeline-story active" data-year="2016">
+                        <h3>The Beginning</h3>
+                        <p>It all began in 2016, when two teenagers met as classmates in senior high school. He was the quiet boy with a guitar, and she was the girl who loved to sing. Though they didn't talk much at first, a school performance brought them together—he played, she sang, and something beautiful began to bloom.</p>
+                    </div>
+                    <div class="timeline-story" data-year="2017">
+                        <h3>Growing Together</h3>
+                        <p>What started as a simple friendship soon grew into something more. Their connection was effortless—filled with laughter, shared moments, and a bond that deepened over time. One day, she confessed her feelings, and though shy and unexpected, he had already felt the same way.</p>
+                    </div>
+                    <div class="timeline-story" data-year="2018">
+                        <h3>The Journey Begins</h3>
+                        <p>As teenagers, they once held a mock wedding—dressed in white, sharing vows over dinner, and dreaming of a future together. That night, a silent prayer was made: that this love would last a lifetime.</p>
+                    </div>
+                    <div class="timeline-story" data-year="2019">
+                        <h3>Love Grows</h3>
+                        <p>Their love continued to blossom through the challenges of growing up together. Every moment shared strengthened their bond and deepened their commitment to each other.</p>
+                    </div>
+                    <div class="timeline-story" data-year="2020">
+                        <h3>Distance & Growth</h3>
+                        <p>They journeyed through love, growth, distance, and rediscovery. Despite the challenges, their love only grew stronger, proving that true love can withstand any obstacle.</p>
+                    </div>
+                    <div class="timeline-story" data-year="2023">
+                        <h3>A Beautiful Blessing</h3>
+                        <p>Their love story welcomed a new chapter with the arrival of their beautiful child, Kayelannoir. This precious blessing brought even more joy and meaning to their journey together.</p>
+                    </div>
+                    <div class="timeline-story" data-year="2025">
+                        <h3>Forever Begins</h3>
+                        <p>Now, nine years later—with a beautiful child and a love that's stood the test of time—they are finally turning that dream into reality. This is the forever they always believed in.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Divider -->
+    <div class="section-divider">
+        <div class="ornate-divider">
+            <div class="scroll-left">
+                <div class="leaf"></div>
+            </div>
+            <div class="central-motif"></div>
+            <div class="scroll-right">
+                <div class="leaf"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RSVP Section -->
+    <section id="rsvp" class="rsvp">
+        <div class="container">
+            <h2 class="section-title">RSVP</h2>
+            <p class="rsvp-subtitle">Please let us know if you can make it to our special day</p>
+            <form class="rsvp-form" id="rsvpForm">
+                <div class="form-group">
+                    <input type="text" id="name" name="name" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder="Email Address" required>
+                </div>
+                <div class="form-group">
+                    <select id="guests" name="guests" required>
+                        <option value="">Number of Guests</option>
+                        <option value="1">1 Guest</option>
+                        <option value="2">2 Guests</option>
+                        <option value="3">3 Guests</option>
+                        <option value="4">4 Guests</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select id="attending" name="attending" required>
+                        <option value="">Will you attend?</option>
+                        <option value="yes">Yes, I will attend</option>
+                        <option value="no">No, I cannot attend</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <textarea id="message" name="message" placeholder="Any dietary restrictions or special requests?"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Send RSVP</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Section Divider -->
+    <div class="section-divider">
+        <div class="ornate-divider">
+            <div class="scroll-left">
+                <div class="leaf"></div>
+            </div>
+            <div class="central-motif"></div>
+            <div class="scroll-right">
+                <div class="leaf"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-text">
+                    <h3>Edannoir & Kristine</h3>
+                    <p>We can't wait to celebrate with you!</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Edannoir & Kristine Wedding. Made with ❤️</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
+</html> 
