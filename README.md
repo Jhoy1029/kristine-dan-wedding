@@ -15,4 +15,6 @@ Access the admin dashboard at: `/admin.html`
 **Updated:** Admin dashboard now uses static storage for better reliability.
 
 ## Deployment
-This site is deployed on Netlify with serverless functions for the RSVP API. 
+This site is deployed on Netlify with serverless functions for the RSVP API.
+
+**Latest Update:** Improved Netlify functions and configuration for better reliability. 
