@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding RSVP Admin - Edannoir & Kristine</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f5de 0%, #e8e8d0 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-title {
+            font-size: 2.5rem;
+            color: #734214;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .admin-subtitle {
+            font-size: 1.2rem;
+            color: #8B7355;
+            font-style: italic;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #734214;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .rsvp-section {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #734214;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .refresh-btn, .export-btn, .clear-btn {
+            background: linear-gradient(135deg, #734214 0%, #8B7355 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 0 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(115, 66, 20, 0.3);
+        }
+
+        .refresh-btn:hover, .export-btn:hover, .clear-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(115, 66, 20, 0.4);
+        }
+
+        .clear-btn {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .clear-btn:hover {
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        .rsvp-filters {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            background: rgba(115, 66, 20, 0.1);
+            border: 2px solid #734214;
+            color: #734214;
+            padding: 8px 20px;
+            margin: 0 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: #734214;
+            color: white;
+        }
+
+        .rsvp-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .rsvp-table th {
+            background: #734214;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .rsvp-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .rsvp-table tr:hover {
+            background: rgba(115, 66, 20, 0.05);
+        }
+
+        .attending-yes {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .attending-no {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .loading, .error {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .error {
+            color: #dc3545;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .manual-entry {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .manual-entry h3 {
+            color: #734214;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #734214;
+        }
+
+        .add-rsvp-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+            margin-top: 15px;
+        }
+
+        .add-rsvp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 10px;
+            }
+
+            .admin-title {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .rsvp-table {
+                font-size: 0.9rem;
+            }
+
+            .rsvp-table th,
+            .rsvp-table td {
+                padding: 8px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1 class="admin-title">Wedding RSVP Dashboard</h1>
+            <p class="admin-subtitle">Edannoir & Kristine</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalRSVPs">0</div>
+                <div class="stat-label">Total RSVPs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="attending">0</div>
+                <div class="stat-label">Attending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="notAttending">0</div>
+                <div class="stat-label">Not Attending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalGuests">0</div>
+                <div class="stat-label">Total Additional Guests</div>
+            </div>
+        </div>
+
+        <div class="rsvp-section">
+            <h2 class="section-title">RSVP Submissions</h2>
+            
+            <div class="button-group">
+                <button class="refresh-btn" onclick="loadRSVPData()">
+                    <i class="fas fa-sync-alt"></i> Refresh Data
+                </button>
+                <button class="export-btn" onclick="exportToCSV()">
+                    <i class="fas fa-download"></i> Export to CSV
+                </button>
+                <button class="clear-btn" onclick="clearAllData()">
+                    <i class="fas fa-trash"></i> Clear All Data
+                </button>
+            </div>
+
+            <div class="rsvp-filters">
+                <button class="filter-btn active" onclick="filterRSVPs('all')">All</button>
+                <button class="filter-btn" onclick="filterRSVPs('yes')">Attending</button>
+                <button class="filter-btn" onclick="filterRSVPs('no')">Not Attending</button>
+            </div>
+
+            <div id="rsvpTableContainer">
+                <div class="loading">Loading RSVP data...</div>
+            </div>
+        </div>
+
+        <div class="manual-entry">
+            <h3>Add Manual RSVP Entry</h3>
+            <form id="manualRSVPForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="manualName">Name *</label>
+                        <input type="text" id="manualName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="manualEmail">Email *</label>
+                        <input type="email" id="manualEmail" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="manualGuests">Additional Guests *</label>
+                        <select id="manualGuests" required>
+                            <option value="">Select...</option>
+                            <option value="0">0 Additional Guests</option>
+                            <option value="1">1 Additional Guest</option>
+                            <option value="2">2 Additional Guests</option>
+                            <option value="3">3 Additional Guests</option>
+                            <option value="4">4 Additional Guests</option>
+                            <option value="5">5 Additional Guests</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="manualAttending">Attending *</label>
+                        <select id="manualAttending" required>
+                            <option value="">Select...</option>
+                            <option value="yes">Yes, I will attend</option>
+                            <option value="no">No, I cannot attend</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="manualMessage">Message</label>
+                        <textarea id="manualMessage" rows="3" placeholder="Optional message..."></textarea>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <button type="submit" class="add-rsvp-btn">
+                        <i class="fas fa-plus"></i> Add RSVP
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let allRSVPs = [];
+        let currentFilter = 'all';
+
+        // Load RSVP data from localStorage
+        function loadRSVPData() {
+            try {
+                const storedData = localStorage.getItem('weddingRSVPs');
+                if (storedData) {
+                    allRSVPs = JSON.parse(storedData);
+                } else {
+                    allRSVPs = [];
+                }
+                updateStats();
+                displayRSVPs();
+            } catch (error) {
+                console.error('Error loading RSVP data:', error);
+                showError('Error loading RSVP data');
+            }
+        }
+
+        // Save RSVP data to localStorage
+        function saveRSVPData() {
+            try {
+                localStorage.setItem('weddingRSVPs', JSON.stringify(allRSVPs));
+            } catch (error) {
+                console.error('Error saving RSVP data:', error);
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const stats = {
+                total: allRSVPs.length,
+                attending: allRSVPs.filter(rsvp => rsvp.attending === 'yes').length,
+                notAttending: allRSVPs.filter(rsvp => rsvp.attending === 'no').length,
+                totalGuests: allRSVPs.reduce((sum, rsvp) => sum + parseInt(rsvp.guests || 0), 0)
+            };
+
+            document.getElementById('totalRSVPs').textContent = stats.total;
+            document.getElementById('attending').textContent = stats.attending;
+            document.getElementById('notAttending').textContent = stats.notAttending;
+            document.getElementById('totalGuests').textContent = stats.totalGuests;
+        }
+
+        // Display RSVPs
+        function displayRSVPs() {
+            const container = document.getElementById('rsvpTableContainer');
+            const filteredRSVPs = filterRSVPData();
+
+            if (filteredRSVPs.length === 0) {
+                container.innerHTML = '<div class="no-data">No RSVPs found</div>';
+                return;
+            }
+
+            const table = `
+                <table class="rsvp-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Additional Guests</th>
+                            <th>Attending</th>
+                            <th>Message</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredRSVPs.map((rsvp, index) => `
+                            <tr>
+                                <td>${rsvp.name}</td>
+                                <td>${rsvp.email}</td>
+                                <td>${rsvp.guests}</td>
+                                <td class="${rsvp.attending === 'yes' ? 'attending-yes' : 'attending-no'}">
+                                    ${rsvp.attending === 'yes' ? 'Yes' : 'No'}
+                                </td>
+                                <td>${rsvp.message || '-'}</td>
+                                <td>${new Date(rsvp.timestamp).toLocaleDateString()}</td>
+                                <td>
+                                    <button onclick="deleteRSVP(${index})" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            container.innerHTML = table;
+        }
+
+        // Filter RSVPs
+        function filterRSVPData() {
+            if (currentFilter === 'all') {
+                return allRSVPs;
+            }
+            return allRSVPs.filter(rsvp => rsvp.attending === currentFilter);
+        }
+
+        // Filter button click
+        function filterRSVPs(filter) {
+            currentFilter = filter;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            displayRSVPs();
+        }
+
+        // Delete RSVP
+        function deleteRSVP(index) {
+            if (confirm('Are you sure you want to delete this RSVP?')) {
+                allRSVPs.splice(index, 1);
+                saveRSVPData();
+                updateStats();
+                displayRSVPs();
+            }
+        }
+
+        // Clear all data
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear ALL RSVP data? This cannot be undone!')) {
+                allRSVPs = [];
+                saveRSVPData();
+                updateStats();
+                displayRSVPs();
+            }
+        }
+
+        // Export to CSV
+        function exportToCSV() {
+            const filteredRSVPs = filterRSVPData();
+            
+            if (filteredRSVPs.length === 0) {
+                alert('No data to export');
+                return;
+            }
+
+            const headers = ['Name', 'Email', 'Additional Guests', 'Attending', 'Message', 'Date'];
+            const csvContent = [
+                headers.join(','),
+                ...filteredRSVPs.map(rsvp => [
+                    `"${rsvp.name}"`,
+                    `"${rsvp.email}"`,
+                    rsvp.guests,
+                    rsvp.attending === 'yes' ? 'Yes' : 'No',
+                    `"${rsvp.message || ''}"`,
+                    new Date(rsvp.timestamp).toLocaleDateString()
+                ].join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `wedding-rsvps-${currentFilter}-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Manual RSVP form submission
+        document.getElementById('manualRSVPForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('manualName').value.trim();
+            const email = document.getElementById('manualEmail').value.trim();
+            const guests = document.getElementById('manualGuests').value;
+            const attending = document.getElementById('manualAttending').value;
+            const message = document.getElementById('manualMessage').value.trim();
+
+            if (!name || !email || !guests || !attending) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            const rsvpEntry = {
+                id: Date.now().toString(),
+                name: name,
+                email: email.toLowerCase(),
+                guests: parseInt(guests),
+                attending: attending,
+                message: message,
+                timestamp: new Date().toISOString()
+            };
+
+            // Check if email already exists
+            const existingIndex = allRSVPs.findIndex(rsvp => rsvp.email === rsvpEntry.email);
+            if (existingIndex !== -1) {
+                if (confirm('An RSVP with this email already exists. Do you want to update it?')) {
+                    allRSVPs[existingIndex] = rsvpEntry;
+                } else {
+                    return;
+                }
+            } else {
+                allRSVPs.push(rsvpEntry);
+            }
+
+            saveRSVPData();
+            updateStats();
+            displayRSVPs();
+            
+            // Reset form
+            document.getElementById('manualRSVPForm').reset();
+            
+            alert('RSVP added successfully!');
+        });
+
+        // Show error message
+        function showError(message) {
+            const container = document.getElementById('rsvpTableContainer');
+            container.innerHTML = `<div class="error">${message}</div>`;
+        }
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', loadRSVPData);
+    </script>
+</body>
+</html> 

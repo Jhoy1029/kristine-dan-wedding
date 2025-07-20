@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - Wedding RSVP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .result {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wedding RSVP API Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Health Check</h2>
+        <button onclick="testHealth()">Test Health Endpoint</button>
+        <div id="healthResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Get RSVP Stats</h2>
+        <button onclick="testStats()">Test Stats Endpoint</button>
+        <div id="statsResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Get All RSVPs</h2>
+        <button onclick="testAllRSVPs()">Test All RSVPs Endpoint</button>
+        <div id="allRSVPsResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: Submit Test RSVP</h2>
+        <button onclick="testSubmitRSVP()">Submit Test RSVP</button>
+        <div id="submitResult" class="result"></div>
+    </div>
+
+    <script>
+        // Auto-detect environment
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const baseUrl = isLocal ? '/api' : '/.netlify/functions/api';
+        
+        console.log('Environment:', isLocal ? 'Local' : 'Netlify');
+        console.log('Base URL:', baseUrl);
+
+        async function testEndpoint(endpoint, method = 'GET', body = null) {
+            const url = `${baseUrl}${endpoint}`;
+            console.log(`Testing: ${method} ${url}`);
+            
+            try {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+                
+                if (body) {
+                    options.body = JSON.stringify(body);
+                }
+                
+                const response = await fetch(url, options);
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                const text = await response.text();
+                console.log('Response text:', text);
+                
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    return {
+                        success: false,
+                        error: 'Response is not valid JSON',
+                        text: text,
+                        status: response.status
+                    };
+                }
+                
+                return {
+                    success: response.ok,
+                    data: data,
+                    status: response.status
+                };
+            } catch (error) {
+                console.error('Fetch error:', error);
+                return {
+                    success: false,
+                    error: error.message
+                };
+            }
+        }
+
+        async function testHealth() {
+            const result = await testEndpoint('/health');
+            const resultDiv = document.getElementById('healthResult');
+            
+            if (result.success) {
+                resultDiv.className = 'result success';
+                resultDiv.textContent = `✅ Success (${result.status}): ${JSON.stringify(result.data, null, 2)}`;
+            } else {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Error: ${result.error}\n\nResponse: ${result.text || 'No response'}\n\nStatus: ${result.status || 'Unknown'}`;
+            }
+        }
+
+        async function testStats() {
+            const result = await testEndpoint('/rsvp/stats');
+            const resultDiv = document.getElementById('statsResult');
+            
+            if (result.success) {
+                resultDiv.className = 'result success';
+                resultDiv.textContent = `✅ Success (${result.status}): ${JSON.stringify(result.data, null, 2)}`;
+            } else {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Error: ${result.error}\n\nResponse: ${result.text || 'No response'}\n\nStatus: ${result.status || 'Unknown'}`;
+            }
+        }
+
+        async function testAllRSVPs() {
+            const result = await testEndpoint('/rsvp/all');
+            const resultDiv = document.getElementById('allRSVPsResult');
+            
+            if (result.success) {
+                resultDiv.className = 'result success';
+                resultDiv.textContent = `✅ Success (${result.status}): ${JSON.stringify(result.data, null, 2)}`;
+            } else {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Error: ${result.error}\n\nResponse: ${result.text || 'No response'}\n\nStatus: ${result.status || 'Unknown'}`;
+            }
+        }
+
+        async function testSubmitRSVP() {
+            const testRSVP = {
+                name: 'Test User',
+                email: 'test@example.com',
+                guests: 2,
+                attending: 'yes',
+                message: 'This is a test RSVP'
+            };
+            
+            const result = await testEndpoint('/rsvp', 'POST', testRSVP);
+            const resultDiv = document.getElementById('submitResult');
+            
+            if (result.success) {
+                resultDiv.className = 'result success';
+                resultDiv.textContent = `✅ Success (${result.status}): ${JSON.stringify(result.data, null, 2)}`;
+            } else {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Error: ${result.error}\n\nResponse: ${result.text || 'No response'}\n\nStatus: ${result.status || 'Unknown'}`;
+            }
+        }
+    </script>
+</body>
+</html> 
