@@ -287,7 +287,17 @@
         // Load RSVP data
         async function loadRSVPData() {
             try {
-                const response = await fetch('/.netlify/functions/api/rsvp/all');
+                // Auto-detect if running locally or on Netlify
+                const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const apiUrl = isLocal ? '/api/rsvp/all' : '/.netlify/functions/api/rsvp/all';
+                
+                console.log('Fetching from:', apiUrl);
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
 
                 if (data.success) {
@@ -297,10 +307,10 @@
                 } else {
                     showError('Failed to load RSVP data');
                 }
-            } catch (error) {
-                showError('Error connecting to server');
-                console.error('Error:', error);
-            }
+                    } catch (error) {
+            console.error('Error details:', error);
+            showError(`Error connecting to server: ${error.message}`);
+        }
         }
 
         // Update statistics

@@ -356,7 +356,11 @@ rsvpForm.addEventListener('submit', async function(e) {
     submitBtn.disabled = true;
     
     try {
-        const response = await fetch('/.netlify/functions/api/rsvp', {
+        // Auto-detect if running locally or on Netlify
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const apiUrl = isLocal ? '/api/rsvp' : '/.netlify/functions/api/rsvp';
+        
+        const response = await fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

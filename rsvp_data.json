@@ -1,20 +1,50 @@
 {
   "rsvps": [
     {
-      "id": "1753029578846",
-      "name": "Christine Jhoy Carubio",
+      "id": "1753030311973",
+      "name": "Features released to Staging",
       "email": "christinejc@yahoo.com",
       "guests": 0,
       "attending": "yes",
       "message": "",
-      "timestamp": "2025-07-20T16:39:38.846Z",
+      "timestamp": "2025-07-20T16:51:51.974Z",
+      "ip": "::1"
+    },
+    {
+      "id": "1753030147919",
+      "name": "Test User",
+      "email": "test@test.com",
+      "guests": 2,
+      "attending": "yes",
+      "message": "test",
+      "timestamp": "2025-07-20T16:49:07.919Z",
+      "ip": "::1"
+    },
+    {
+      "id": "1753030166109",
+      "name": "Local Test",
+      "email": "local@test.com",
+      "guests": 1,
+      "attending": "yes",
+      "message": "Testing local RSVP",
+      "timestamp": "2025-07-20T16:49:26.109Z",
+      "ip": "::1"
+    },
+    {
+      "id": "1753030331117",
+      "name": "Not ready for release",
+      "email": "jhoy@vananaz.com",
+      "guests": 0,
+      "attending": "yes",
+      "message": "",
+      "timestamp": "2025-07-20T16:52:11.117Z",
       "ip": "::1"
     }
   ],
   "stats": {
-    "total": 1,
-    "attending": 1,
+    "total": 4,
+    "attending": 4,
     "notAttending": 0,
-    "totalGuests": 0
+    "totalGuests": 3
   }
 }
