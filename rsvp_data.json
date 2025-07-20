@@ -1,0 +1,20 @@
+{
+  "rsvps": [
+    {
+      "id": "1753029578846",
+      "name": "Christine Jhoy Carubio",
+      "email": "christinejc@yahoo.com",
+      "guests": 0,
+      "attending": "yes",
+      "message": "",
+      "timestamp": "2025-07-20T16:39:38.846Z",
+      "ip": "::1"
+    }
+  ],
+  "stats": {
+    "total": 1,
+    "attending": 1,
+    "notAttending": 0,
+    "totalGuests": 0
+  }
+}

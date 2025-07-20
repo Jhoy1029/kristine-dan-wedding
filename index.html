@@ -29,6 +29,7 @@
                 <li><a href="#home" class="nav-link">Home</a></li>
                 <li><a href="#details" class="nav-link">Details</a></li>
                 <li><a href="#love-timeline" class="nav-link">Our Story</a></li>
+                <li><a href="#reminders" class="nav-link">Reminders</a></li>
                 <li><a href="#rsvp" class="nav-link">RSVP</a></li>
             </ul>
             <div class="hamburger">
@@ -84,19 +85,6 @@
             <i class="fas fa-chevron-down"></i>
         </div>
     </section>
-
-    <!-- Section Divider -->
-    <div class="section-divider">
-        <div class="ornate-divider">
-            <div class="scroll-left">
-                <div class="leaf"></div>
-            </div>
-            <div class="central-motif"></div>
-            <div class="scroll-right">
-                <div class="leaf"></div>
-            </div>
-        </div>
-    </div>
 
     <!-- Wedding Details Section -->
     <section id="details" class="details">
@@ -174,26 +162,13 @@
         </div>
     </section>
 
-    <!-- Section Divider -->
-    <div class="section-divider">
-        <div class="ornate-divider">
-            <div class="scroll-left">
-                <div class="leaf"></div>
-            </div>
-            <div class="central-motif"></div>
-            <div class="scroll-right">
-                <div class="leaf"></div>
-            </div>
-        </div>
-    </div>
-
     <!-- Our Love Story Timeline Section -->
     <section id="love-timeline" class="love-timeline">
         <div class="container">
-            <h2 class="section-title">Our Love Story</h2>
-            <p class="timeline-subtitle">Follow the timeline</p>
+            <h2 class="section-title script-font">Our Love Story</h2>
             
             <div class="timeline-container">
+                <!-- Desktop/Tablet Timeline -->
                 <div class="timeline-hearts">
                     <div class="heart-item active" data-year="2016">
                         <i class="fas fa-heart"></i>
@@ -205,7 +180,7 @@
                     </div>
                     <div class="heart-item" data-year="2018">
                         <i class="fas fa-heart"></i>
-                        <span class="year-label">The Journey Begins</span>
+                        <span class="year-label">Journey Begins</span>
                     </div>
                     <div class="heart-item" data-year="2019">
                         <i class="fas fa-heart"></i>
@@ -225,6 +200,57 @@
                     </div>
                 </div>
                 
+                <!-- Mobile Timeline -->
+                <div class="timeline-carousel">
+                    <button class="mobile-next-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <div class="timeline-carousel-container">
+                        <div class="timeline-carousel-item" data-year="2016">
+                            <div class="heart-item active">
+                                <i class="fas fa-heart"></i>
+                                <span class="year-label">The Beginning</span>
+                            </div>
+                        </div>
+                        <div class="timeline-carousel-item" data-year="2017">
+                            <div class="heart-item">
+                                <i class="fas fa-heart"></i>
+                                <span class="year-label">Growing Together</span>
+                            </div>
+                        </div>
+                        <div class="timeline-carousel-item" data-year="2018">
+                            <div class="heart-item">
+                                <i class="fas fa-heart"></i>
+                                <span class="year-label">Journey Begins</span>
+                            </div>
+                        </div>
+                        <div class="timeline-carousel-item" data-year="2019">
+                            <div class="heart-item">
+                                <i class="fas fa-heart"></i>
+                                <span class="year-label">Love Grows</span>
+                            </div>
+                        </div>
+                        <div class="timeline-carousel-item" data-year="2020">
+                            <div class="heart-item">
+                                <i class="fas fa-heart"></i>
+                                <span class="year-label">Distance & Growth</span>
+                            </div>
+                        </div>
+                        <div class="timeline-carousel-item" data-year="2023">
+                            <div class="heart-item">
+                                <i class="fas fa-heart"></i>
+                                <span class="year-label">A Beautiful Blessing</span>
+                            </div>
+                        </div>
+                        <div class="timeline-carousel-item" data-year="2025">
+                            <div class="heart-item">
+                                <i class="fas fa-heart"></i>
+                                <span class="year-label">Forever Begins</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="timeline-content">
                     <div class="timeline-story active" data-year="2016">
                         <h3>The Beginning</h3>
@@ -235,7 +261,7 @@
                         <p>What started as a simple friendship soon grew into something more. Their connection was effortless—filled with laughter, shared moments, and a bond that deepened over time. One day, she confessed her feelings, and though shy and unexpected, he had already felt the same way.</p>
                     </div>
                     <div class="timeline-story" data-year="2018">
-                        <h3>The Journey Begins</h3>
+                        <h3>Journey Begins</h3>
                         <p>As teenagers, they once held a mock wedding—dressed in white, sharing vows over dinner, and dreaming of a future together. That night, a silent prayer was made: that this love would last a lifetime.</p>
                     </div>
                     <div class="timeline-story" data-year="2019">
@@ -255,27 +281,198 @@
                         <p>Now, nine years later—with a beautiful child and a love that's stood the test of time—they are finally turning that dream into reality. This is the forever they always believed in.</p>
                     </div>
                 </div>
+                
+                <!-- Mobile Heart Navigation Buttons -->
+                <div class="mobile-heart-next">
+                    <button class="mobile-heart-prev-btn" id="mobileHeartPrev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="mobile-heart-next-btn" id="mobileHeartNext">
+                        <i class="fas fa-heart"></i>
+                        <span class="btn-text">Continue Our Story</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Section Divider -->
-    <div class="section-divider">
-        <div class="ornate-divider">
-            <div class="scroll-left">
-                <div class="leaf"></div>
+    <!-- Important Reminders Section -->
+    <section id="reminders" class="reminders">
+        <div class="container">
+            <h2 class="section-title script-font">Important Reminders</h2>
+            <p class="reminders-subtitle">Please take note of these important details for our special day</p>
+            
+            <div class="reminders-carousel">
+                <button class="reminder-nav-btn prev-btn" id="reminderPrev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="reminders-container">
+                    <div class="reminder-slide active" data-slide="1">
+                        <div class="reminder-card">
+                            <div class="reminder-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <h3>I. Please Stay Until the End</h3>
+                            <p>We humbly ask that you stay for the entire event, which will last approximately 3–4 hours including the ceremony and reception. We truly appreciate your presence and hope you'll celebrate this special day with us from beginning to end.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="reminder-slide" data-slide="2">
+                        <div class="reminder-card">
+                            <div class="reminder-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h3>II. Unplugged Ceremony</h3>
+                            <p>During the wedding ceremony, we kindly request that all cellphones and gadgets be put away. Our professional photographers will be capturing every beautiful moment — including you! So relax, be present, and enjoy the ceremony.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="reminder-slide" data-slide="3">
+                        <div class="reminder-card">
+                            <div class="reminder-icon">
+                                <i class="fas fa-tshirt"></i>
+                            </div>
+                            <h3>III. Dress Code</h3>
+                            <p>To match the theme, we encourage everyone to wear vintage or classic attire. Kindly avoid T-shirts, shorts, tank tops, or any modern casual wear. Let's dress to impress — timelessly!</p>
+                        </div>
+                    </div>
+                    
+                    <div class="reminder-slide" data-slide="4">
+                        <div class="reminder-card">
+                            <div class="reminder-icon">
+                                <i class="fas fa-child"></i>
+                            </div>
+                            <h3>IV. For Guests with Children</h3>
+                            <p>If you're bringing children, we kindly ask that they remain seated and refrain from running around to maintain the flow and respectfulness of the event.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="reminder-slide" data-slide="5">
+                        <div class="reminder-card">
+                            <div class="reminder-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3>V. Guest List Policy</h3>
+                            <p>As much as we'd love to celebrate with everyone, we can only accommodate those listed on our guest list. We kindly ask that no unannounced or additional guests be brought. Your understanding is deeply appreciated.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="reminder-nav-btn next-btn" id="reminderNext">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
-            <div class="central-motif"></div>
-            <div class="scroll-right">
-                <div class="leaf"></div>
+            
+            <div class="reminder-dots">
+                <span class="dot active" data-slide="1"></span>
+                <span class="dot" data-slide="2"></span>
+                <span class="dot" data-slide="3"></span>
+                <span class="dot" data-slide="4"></span>
+                <span class="dot" data-slide="5"></span>
             </div>
         </div>
+    </section>
+
+    <!-- Timeline Sections Container -->
+    <div class="timeline-sections-container">
+        <!-- Ceremony Section -->
+        <section id="ceremony" class="ceremony-section">
+            <div class="container">
+                <h2 class="section-title script-font">Ceremony</h2>
+                <div class="ceremony-timeline">
+                    <div class="timeline-item">
+                        <div class="time">2:50 pm</div>
+                        <div class="event">Prelude</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">3:00 pm</div>
+                        <div class="event">Processional</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">3:20 pm</div>
+                        <div class="event">Minister's Introduction</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">3:25 pm</div>
+                        <div class="event">Praise and Worship</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">3:35 pm</div>
+                        <div class="event">Scripture Reading</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">4:30 pm</div>
+                        <div class="event">Exchanging of God's Word</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">4:30 pm</div>
+                        <div class="event">Exchange of Vows</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">4:50 pm</div>
+                        <div class="event">Charge to Sponsors</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">4:55 pm</div>
+                        <div class="event">Marriage Certificate Signing</div>
+                    </div>
+                                    <div class="timeline-item">
+                    <div class="time">5:10 pm</div>
+                    <div class="event">Presentation of Couple / Pronouncement</div>
+                </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Reception Section -->
+        <section id="reception" class="reception-section">
+            <div class="container">
+                <h2 class="section-title script-font">Reception</h2>
+                <div class="reception-timeline">
+                    <div class="timeline-item">
+                        <div class="time">6:00 pm</div>
+                        <div class="event">Calling & seating of guests</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">6:10 pm</div>
+                        <div class="event">Entrance of the Entourage</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">6:15 pm</div>
+                        <div class="event">Grand Entrance of the Newlyweds</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">6:25 pm</div>
+                        <div class="event">Bride & Groom's First Dance</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">6:35 pm</div>
+                        <div class="event">Toasts and messages</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">6:45 pm</div>
+                        <div class="event">Prayer for the food</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">7:20 pm</div>
+                        <div class="event">Cake Cutting</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">7:30 pm</div>
+                        <div class="event">Last message and farewell</div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
     <!-- RSVP Section -->
     <section id="rsvp" class="rsvp">
         <div class="container">
-            <h2 class="section-title">RSVP</h2>
+            <h2 class="section-title script-font">RSVP</h2>
             <p class="rsvp-subtitle">Please let us know if you can make it to our special day</p>
             <form class="rsvp-form" id="rsvpForm">
                 <div class="form-group">
@@ -285,13 +482,14 @@
                     <input type="email" id="email" name="email" placeholder="Email Address" required>
                 </div>
                 <div class="form-group">
-                    <select id="guests" name="guests" required>
-                        <option value="">Number of Guests</option>
-                        <option value="1">1 Guest</option>
-                        <option value="2">2 Guests</option>
-                        <option value="3">3 Guests</option>
-                        <option value="4">4 Guests</option>
-                    </select>
+                                    <select id="guests" name="guests" required>
+                    <option value="">Number of Additional Guests</option>
+                    <option value="0">0 Additional Guests</option>
+                    <option value="1">1 Additional Guest</option>
+                    <option value="2">2 Additional Guests</option>
+                    <option value="3">3 Additional Guests</option>
+                    <option value="4">4 Additional Guests</option>
+                </select>
                 </div>
                 <div class="form-group">
                     <select id="attending" name="attending" required>
@@ -308,19 +506,6 @@
         </div>
     </section>
 
-    <!-- Section Divider -->
-    <div class="section-divider">
-        <div class="ornate-divider">
-            <div class="scroll-left">
-                <div class="leaf"></div>
-            </div>
-            <div class="central-motif"></div>
-            <div class="scroll-right">
-                <div class="leaf"></div>
-            </div>
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -330,9 +515,8 @@
                     <p>We can't wait to celebrate with you!</p>
                 </div>
                 <div class="footer-social">
-                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/kristine.social/" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/anythingunderkristine" target="_blank" class="social-link"><i class="fab fa-facebook"></i></a>
                 </div>
             </div>
             <div class="footer-bottom">

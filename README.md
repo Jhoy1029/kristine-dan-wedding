@@ -1,173 +1,149 @@
-# Edannoir & Kristine - Wedding E-Invite
+# Edannoir & Kristine Wedding Website
 
-A stunning, interactive wedding invitation website for Edannoir and Kristine's special day. This modern, responsive website features beautiful animations, interactive elements, and a complete RSVP system.
+A beautiful, responsive wedding invitation website with RSVP functionality.
 
-## 🌟 Features
+## Features
 
-### ✨ Visual Design
-- **Modern & Elegant Design**: Clean, sophisticated layout with beautiful typography
-- **Responsive Layout**: Perfect on desktop, tablet, and mobile devices
-- **Beautiful Animations**: Smooth scroll animations, parallax effects, and interactive elements
-- **Loading Screen**: Animated hearts loading screen for a magical entrance
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
+- **Interactive Timeline**: Our love story with animated timeline
+- **Wedding Details**: Ceremony and reception schedules
+- **Photo Gallery**: Lightbox gallery with navigation
+- **RSVP System**: Complete RSVP functionality with backend
+- **Admin Dashboard**: View and manage RSVP submissions
+- **Email Notifications**: Automatic confirmation emails
+- **Countdown Timer**: Real-time countdown to the wedding day
 
-### 📱 Interactive Elements
-- **Smooth Navigation**: Fixed navigation bar with smooth scrolling
-- **Countdown Timer**: Live countdown to the wedding day
-- **Photo Gallery**: Interactive lightbox gallery with navigation
-- **RSVP System**: Complete RSVP form with validation and notifications
-- **Floating Hearts**: Animated hearts floating across the screen
-- **Confetti Effect**: Celebration animation on RSVP submission
+## RSVP Functionality
 
-### 🎨 Sections
-1. **Hero Section**: Stunning landing page with couple's names and wedding details
-2. **Our Story**: Beautiful narrative about how the couple met and got engaged
-3. **Wedding Details**: Complete information about date, venue, and logistics
-4. **Photo Gallery**: Interactive gallery showcasing beautiful moments
-5. **RSVP Form**: Easy-to-use RSVP system for guests
+The website includes a complete RSVP system with:
 
-### 🚀 Technical Features
-- **Pure HTML/CSS/JavaScript**: No frameworks required
-- **Mobile-First Design**: Optimized for all screen sizes
-- **Performance Optimized**: Fast loading and smooth animations
-- **Accessibility**: Keyboard navigation and screen reader friendly
-- **Cross-Browser Compatible**: Works on all modern browsers
+- **Form Validation**: Required fields and data validation
+- **Backend Storage**: JSON file-based database
+- **Email Confirmations**: Automatic email notifications
+- **Admin Dashboard**: View submissions and statistics
+- **CSV Export**: Export RSVP data for analysis
+- **Real-time Updates**: Live statistics and data refresh
 
-## 📁 File Structure
+## Setup Instructions
 
-```
-Kristine and Dan/
-├── index.html          # Main HTML file
-├── styles.css          # All CSS styles and animations
-├── script.js           # JavaScript functionality
-├── README.md           # This file
-└── Assests/            # Image assets
-    ├── intro.jpg       # Hero background image
-    ├── bg.jpg          # Gallery image
-    └── [other images]  # Additional gallery images
-```
-
-## 🛠️ Setup & Usage
-
-### Prerequisites
-- A modern web browser (Chrome, Firefox, Safari, Edge)
-- A local web server (optional, for testing)
-
-### Installation
-1. Download or clone the project files
-2. Ensure all images are in the `Assests/` folder
-3. Open `index.html` in your web browser
-
-### Local Development Server
-For the best experience, run a local server:
+### 1. Install Dependencies
 
 ```bash
-# Using Python 3
-python -m http.server 8000
-
-# Using Node.js (if you have http-server installed)
-npx http-server
-
-# Using PHP
-php -S localhost:8000
+npm install
 ```
 
-Then visit `http://localhost:8000` in your browser.
+### 2. Configure Email (Optional)
 
-## 🎯 Customization
+To enable email notifications, set up your email credentials:
 
-### Changing Wedding Details
-Edit the following in `index.html`:
-- **Names**: Update "Edannoir" and "Kristine" throughout the file
-- **Date**: Change "December 15, 2024" to your wedding date
-- **Location**: Update venue details in the details section
-- **Time**: Modify the wedding time in the countdown timer
+```bash
+# For Gmail (recommended)
+export EMAIL_USER="your-email@gmail.com"
+export EMAIL_PASS="your-app-password"
 
-### Updating Images
-1. Replace images in the `Assests/` folder
-2. Update image paths in `index.html` and `script.js`
-3. Ensure images are optimized for web (recommended: 1920x1080 or smaller)
+# For other email providers, modify the transporter configuration in server.js
+```
 
-### Styling Changes
-- **Colors**: Modify the CSS variables in `styles.css`
-- **Fonts**: Change Google Fonts import in `index.html`
-- **Animations**: Adjust timing and effects in `styles.css`
+**Note**: For Gmail, you'll need to:
+1. Enable 2-factor authentication
+2. Generate an "App Password"
+3. Use the app password instead of your regular password
 
-### RSVP Form
-The RSVP form currently logs data to the console. To make it functional:
-1. Set up a backend server (Node.js, PHP, Python, etc.)
-2. Modify the form submission in `script.js`
-3. Add email notifications or database storage
+### 3. Start the Server
 
-## 📱 Mobile Optimization
+```bash
+# Development mode (with auto-restart)
+npm run dev
 
-The website is fully responsive and includes:
-- **Touch-friendly navigation**: Large buttons and easy scrolling
-- **Optimized images**: Fast loading on mobile networks
-- **Mobile menu**: Hamburger menu for smaller screens
-- **Touch gestures**: Swipe-friendly gallery navigation
+# Production mode
+npm start
+```
 
-## 🌐 Browser Support
+The server will start on `http://localhost:3000`
 
-- ✅ Chrome (latest)
-- ✅ Firefox (latest)
-- ✅ Safari (latest)
-- ✅ Edge (latest)
-- ✅ Mobile browsers (iOS Safari, Chrome Mobile)
+### 4. Access Points
 
-## 🎨 Design Features
+- **Wedding Website**: `http://localhost:3000`
+- **Admin Dashboard**: `http://localhost:3000/admin.html`
 
-### Color Scheme
-- **Primary**: Purple gradient (#667eea to #764ba2)
-- **Secondary**: White and light grays
-- **Accent**: Gold and warm tones
+## File Structure
 
-### Typography
-- **Headings**: Playfair Display (elegant serif)
-- **Body**: Montserrat (clean sans-serif)
+```
+├── index.html          # Main wedding website
+├── admin.html          # Admin dashboard
+├── server.js           # Express server
+├── script.js           # Frontend JavaScript
+├── styles.css          # CSS styles
+├── package.json        # Dependencies
+├── rsvp_data.json      # RSVP database (auto-generated)
+└── Assests/            # Images and media files
+```
 
-### Animations
-- **Fade-in effects**: Elements appear as you scroll
-- **Parallax scrolling**: Hero image moves on scroll
-- **Hover effects**: Interactive buttons and cards
-- **Loading animations**: Smooth page transitions
+## Admin Dashboard Features
 
-## 🔧 Advanced Features
+- **Real-time Statistics**: Total RSVPs, attending/not attending counts
+- **RSVP Management**: View all submissions in a table format
+- **Filtering**: Filter by attendance status
+- **CSV Export**: Download RSVP data for analysis
+- **Auto-refresh**: Data updates every 30 seconds
 
-### Countdown Timer
-- Real-time countdown to wedding day
-- Automatically updates every second
-- Shows days, hours, minutes, and seconds
+## API Endpoints
 
-### Photo Gallery
-- Click to enlarge images
-- Keyboard navigation (arrow keys, escape)
-- Touch-friendly on mobile devices
+- `POST /api/rsvp` - Submit RSVP
+- `GET /api/rsvp/stats` - Get RSVP statistics
+- `GET /api/rsvp/all` - Get all RSVP data
 
-### RSVP System
-- Form validation
-- Success notifications
-- Confetti celebration effect
-- Mobile-optimized form fields
+## Customization
 
-## 📞 Support
+### Colors and Styling
+The website uses a warm autumn color palette:
+- Primary Brown: `#734214`
+- Soft Beige: `#f4e8d1`
+- Burnt Orange: `#c25d2e`
+- Pale Cream: `#f5f5de`
 
-For questions or customization requests:
-1. Check the code comments for guidance
-2. Review the browser console for any errors
-3. Ensure all files are in the correct locations
+### Wedding Details
+Update the following in `index.html`:
+- Wedding date and time
+- Venue information
+- Timeline events
+- Social media links
 
-## 🎉 Special Features
+### Images
+Replace images in the `Assests/` folder:
+- `intro.jpg` - Hero background
+- `1.jpg` to `8.jpg` - Gallery images
+- `bg.jpg` - Background images
 
-- **Floating Hearts**: Animated hearts float across the screen
-- **Progress Bar**: Shows scroll progress at the top
-- **Smooth Scrolling**: Elegant navigation between sections
-- **Backdrop Blur**: Modern glass-morphism effects
-- **Confetti Animation**: Celebration effect on RSVP submission
+## Deployment
 
-## 📄 License
+### Local Development
+```bash
+npm run dev
+```
 
-This project is created for Edannoir and Kristine's wedding. Feel free to use and modify for your own special day!
+### Production Deployment
+1. Set up environment variables
+2. Run `npm start`
+3. Use a process manager like PM2 for production
+
+### Hosting Options
+- **Heroku**: Easy deployment with Git
+- **Vercel**: Great for static sites
+- **Netlify**: Excellent for frontend hosting
+- **DigitalOcean**: Full control over server
+
+## Security Notes
+
+- The admin dashboard has no authentication (add if needed)
+- Email credentials should be kept secure
+- Consider adding rate limiting for RSVP submissions
+- Backup the `rsvp_data.json` file regularly
+
+## Support
+
+For questions or issues, please contact the development team.
 
 ---
 
-**Made with ❤️ for Edannoir & Kristine's Wedding** 
+**Made with ❤️ for Edannoir & Kristine's special day** 
