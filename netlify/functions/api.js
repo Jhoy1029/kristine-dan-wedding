@@ -16,22 +16,31 @@ const RSVP_FILE = process.env.RSVP_FILE || '/tmp/rsvp_data.json';
 
 // Initialize RSVP data file if it doesn't exist
 function initializeRSVPFile() {
-    if (!fs.existsSync(RSVP_FILE)) {
-        fs.writeFileSync(RSVP_FILE, JSON.stringify({
-            rsvps: [],
-            stats: {
-                total: 0,
-                attending: 0,
-                notAttending: 0,
-                totalGuests: 0
-            }
-        }, null, 2));
+    try {
+        if (!fs.existsSync(RSVP_FILE)) {
+            const initialData = {
+                rsvps: [],
+                stats: {
+                    total: 0,
+                    attending: 0,
+                    notAttending: 0,
+                    totalGuests: 0
+                }
+            };
+            fs.writeFileSync(RSVP_FILE, JSON.stringify(initialData, null, 2));
+            console.log('RSVP file initialized at:', RSVP_FILE);
+        }
+    } catch (error) {
+        console.error('Error initializing RSVP file:', error);
     }
 }
 
 // Read RSVP data
 function readRSVPData() {
     try {
+        if (!fs.existsSync(RSVP_FILE)) {
+            initializeRSVPFile();
+        }
         const data = fs.readFileSync(RSVP_FILE, 'utf8');
         return JSON.parse(data);
     } catch (error) {
@@ -64,24 +73,30 @@ function updateStats(rsvpData) {
 }
 
 // Email configuration (optional)
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER || 'your-email@gmail.com',
-        pass: process.env.EMAIL_PASS || 'your-app-password'
-    }
-});
+let transporter = null;
+if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+    transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
+    });
+}
 
 // Initialize the database
 initializeRSVPFile();
 
 // API Routes
 app.post('/rsvp', async (req, res) => {
+    console.log('RSVP POST request received:', req.body);
+    
     try {
         const { name, email, guests, attending, message } = req.body;
 
         // Validation
         if (!name || !email || !guests || !attending) {
+            console.log('Validation failed - missing required fields');
             return res.status(400).json({
                 success: false,
                 message: 'Please fill in all required fields'
@@ -97,7 +112,7 @@ app.post('/rsvp', async (req, res) => {
             attending,
             message: message ? message.trim() : '',
             timestamp: new Date().toISOString(),
-            ip: req.ip
+            ip: req.ip || req.connection.remoteAddress
         };
 
         // Read current data
@@ -109,9 +124,11 @@ app.post('/rsvp', async (req, res) => {
             // Update existing RSVP
             const index = rsvpData.rsvps.findIndex(rsvp => rsvp.email === rsvpEntry.email);
             rsvpData.rsvps[index] = { ...existingRSVP, ...rsvpEntry };
+            console.log('Updated existing RSVP for:', email);
         } else {
             // Add new RSVP
             rsvpData.rsvps.push(rsvpEntry);
+            console.log('Added new RSVP for:', email);
         }
 
         // Update statistics
@@ -119,6 +136,7 @@ app.post('/rsvp', async (req, res) => {
 
         // Save to file
         if (!writeRSVPData(updatedData)) {
+            console.error('Failed to save RSVP data');
             return res.status(500).json({
                 success: false,
                 message: 'Error saving RSVP data'
@@ -126,7 +144,7 @@ app.post('/rsvp', async (req, res) => {
         }
 
         // Send confirmation email (optional)
-        if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+        if (transporter) {
             try {
                 const mailOptions = {
                     from: process.env.EMAIL_USER,
@@ -151,11 +169,13 @@ app.post('/rsvp', async (req, res) => {
                 };
 
                 await transporter.sendMail(mailOptions);
+                console.log('Confirmation email sent to:', email);
             } catch (emailError) {
                 console.error('Email sending failed:', emailError);
             }
         }
 
+        console.log('RSVP processed successfully for:', email);
         res.json({
             success: true,
             message: 'Thank you for your RSVP! We look forward to celebrating with you!',
@@ -173,14 +193,17 @@ app.post('/rsvp', async (req, res) => {
 
 // Get RSVP statistics
 app.get('/rsvp/stats', (req, res) => {
+    console.log('Stats GET request received');
     try {
         const rsvpData = readRSVPData();
+        console.log('Stats retrieved successfully:', rsvpData.stats);
         res.json({
             success: true,
             stats: rsvpData.stats,
             totalRSVPs: rsvpData.rsvps.length
         });
     } catch (error) {
+        console.error('Error retrieving stats:', error);
         res.status(500).json({
             success: false,
             message: 'Error retrieving RSVP statistics'
@@ -190,14 +213,17 @@ app.get('/rsvp/stats', (req, res) => {
 
 // Get all RSVPs
 app.get('/rsvp/all', (req, res) => {
+    console.log('All RSVPs GET request received');
     try {
         const rsvpData = readRSVPData();
+        console.log('All RSVPs retrieved successfully, count:', rsvpData.rsvps.length);
         res.json({
             success: true,
             rsvps: rsvpData.rsvps,
             stats: rsvpData.stats
         });
     } catch (error) {
+        console.error('Error retrieving all RSVPs:', error);
         res.status(500).json({
             success: false,
             message: 'Error retrieving RSVP data'
@@ -207,7 +233,32 @@ app.get('/rsvp/all', (req, res) => {
 
 // Health check
 app.get('/health', (req, res) => {
-    res.json({ status: 'OK', message: 'Wedding RSVP API is running' });
+    console.log('Health check request received');
+    res.json({ 
+        status: 'OK', 
+        message: 'Wedding RSVP API is running',
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development'
+    });
+});
+
+// Error handling middleware
+app.use((error, req, res, next) => {
+    console.error('Unhandled error:', error);
+    res.status(500).json({
+        success: false,
+        message: 'Internal server error',
+        error: process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'
+    });
+});
+
+// 404 handler
+app.use((req, res) => {
+    console.log('404 - Route not found:', req.method, req.url);
+    res.status(404).json({
+        success: false,
+        message: 'Route not found'
+    });
 });
 
 module.exports.handler = serverless(app); 
