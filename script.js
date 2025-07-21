@@ -356,47 +356,74 @@ rsvpForm.addEventListener('submit', async function(e) {
     submitBtn.disabled = true;
     
     try {
-        // Create RSVP entry
-        const rsvpEntry = {
-            id: Date.now().toString(),
-            name: name.trim(),
-            email: email.trim().toLowerCase(),
-            guests: parseInt(guests),
-            attending,
-            message: message ? message.trim() : '',
-            timestamp: new Date().toISOString(),
-            source: 'form'
-        };
+        // Send RSVP to Netlify function API
+        const response = await fetch('/.netlify/functions/api/rsvp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: name.trim(),
+                email: email.trim().toLowerCase(),
+                guests: parseInt(guests),
+                attending,
+                message: message ? message.trim() : ''
+            })
+        });
 
-        // Get existing RSVPs from localStorage
-        const existingRSVPs = JSON.parse(localStorage.getItem('weddingRSVPs') || '[]');
-        
-        // Check if email already exists
-        const existingIndex = existingRSVPs.findIndex(rsvp => rsvp.email === rsvpEntry.email);
-        
-        if (existingIndex !== -1) {
-            // Update existing RSVP
-            existingRSVPs[existingIndex] = { ...existingRSVPs[existingIndex], ...rsvpEntry };
-        } else {
-            // Add new RSVP
-            existingRSVPs.push(rsvpEntry);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        const result = await response.json();
         
-        // Save back to localStorage
-        localStorage.setItem('weddingRSVPs', JSON.stringify(existingRSVPs));
-        
-        // Show success message
-        showNotification('RSVP submitted successfully! Thank you for your response.', 'success');
-        
-        // Reset form
-        rsvpForm.reset();
-        
-        // Create confetti effect
-        createConfetti();
+        if (result.success) {
+            // Show success message
+            showNotification('RSVP submitted successfully! Thank you for your response.', 'success');
+            
+            // Reset form
+            rsvpForm.reset();
+            
+            // Create confetti effect
+            createConfetti();
+        } else {
+            throw new Error(result.message || 'Failed to submit RSVP');
+        }
         
     } catch (error) {
         console.error('RSVP submission error:', error);
-        showNotification('Error submitting RSVP. Please try again.', 'error');
+        
+        // Fallback to localStorage if server is unavailable
+        try {
+            const rsvpEntry = {
+                id: Date.now().toString(),
+                name: name.trim(),
+                email: email.trim().toLowerCase(),
+                guests: parseInt(guests),
+                attending,
+                message: message ? message.trim() : '',
+                timestamp: new Date().toISOString(),
+                source: 'form'
+            };
+
+            const existingRSVPs = JSON.parse(localStorage.getItem('weddingRSVPs') || '[]');
+            const existingIndex = existingRSVPs.findIndex(rsvp => rsvp.email === rsvpEntry.email);
+            
+            if (existingIndex !== -1) {
+                existingRSVPs[existingIndex] = { ...existingRSVPs[existingIndex], ...rsvpEntry };
+            } else {
+                existingRSVPs.push(rsvpEntry);
+            }
+            
+            localStorage.setItem('weddingRSVPs', JSON.stringify(existingRSVPs));
+            
+            showNotification('RSVP saved locally (server unavailable). We\'ll sync when possible.', 'info');
+            rsvpForm.reset();
+            createConfetti();
+        } catch (localError) {
+            console.error('Local storage error:', localError);
+            showNotification('Error submitting RSVP. Please try again.', 'error');
+        }
     } finally {
         // Reset button state
         submitBtn.textContent = originalText;
