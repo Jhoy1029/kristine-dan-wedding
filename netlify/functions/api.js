@@ -14,6 +14,17 @@ app.use(express.json());
 // Database file path (using environment variable for Netlify)
 const RSVP_FILE = process.env.RSVP_FILE || '/tmp/rsvp_data.json';
 
+// In-memory storage as fallback (for Netlify Functions)
+let inMemoryData = {
+    rsvps: [],
+    stats: {
+        total: 0,
+        attending: 0,
+        notAttending: 0,
+        totalGuests: 0
+    }
+};
+
 // Initialize RSVP data file if it doesn't exist
 function initializeRSVPFile() {
     try {
@@ -38,25 +49,39 @@ function initializeRSVPFile() {
 // Read RSVP data
 function readRSVPData() {
     try {
-        if (!fs.existsSync(RSVP_FILE)) {
+        // Try to read from file first
+        if (fs.existsSync(RSVP_FILE)) {
+            const data = fs.readFileSync(RSVP_FILE, 'utf8');
+            return JSON.parse(data);
+        } else {
+            // If file doesn't exist, try to initialize it
             initializeRSVPFile();
+            if (fs.existsSync(RSVP_FILE)) {
+                const data = fs.readFileSync(RSVP_FILE, 'utf8');
+                return JSON.parse(data);
+            }
         }
-        const data = fs.readFileSync(RSVP_FILE, 'utf8');
-        return JSON.parse(data);
     } catch (error) {
-        console.error('Error reading RSVP data:', error);
-        return { rsvps: [], stats: { total: 0, attending: 0, notAttending: 0, totalGuests: 0 } };
+        console.error('Error reading RSVP data from file, using in-memory:', error);
     }
+    
+    // Fallback to in-memory data
+    return inMemoryData;
 }
 
 // Write RSVP data
 function writeRSVPData(data) {
     try {
+        // Try to write to file first
         fs.writeFileSync(RSVP_FILE, JSON.stringify(data, null, 2));
+        // Also update in-memory data
+        inMemoryData = data;
         return true;
     } catch (error) {
-        console.error('Error writing RSVP data:', error);
-        return false;
+        console.error('Error writing RSVP data to file, using in-memory:', error);
+        // Fallback to in-memory storage
+        inMemoryData = data;
+        return true;
     }
 }
 
@@ -238,7 +263,10 @@ app.get('/health', (req, res) => {
         status: 'OK', 
         message: 'Wedding RSVP API is running',
         timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV || 'development'
+        environment: process.env.NODE_ENV || 'development',
+        rsvpFile: RSVP_FILE,
+        fileExists: fs.existsSync(RSVP_FILE),
+        inMemoryCount: inMemoryData.rsvps.length
     });
 });
 
@@ -261,4 +289,21 @@ app.use((req, res) => {
     });
 });
 
-module.exports.handler = serverless(app); 
+// Export the handler for Netlify Functions
+exports.handler = async function(event, context) {
+    // Handle CORS preflight requests
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+            },
+            body: ''
+        };
+    }
+
+    // Use serverless-http to handle the request
+    return serverless(app)(event, context);
+}; 

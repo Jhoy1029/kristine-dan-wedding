@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wedding RSVP Admin - Edannoir & Kristine</title>
+    <title>Simple Wedding RSVP Admin - Edannoir & Kristine</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -45,6 +45,28 @@
             font-size: 1.2rem;
             color: #8B7355;
             font-style: italic;
+        }
+
+        .connection-status {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .connection-status.connected {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .connection-status.error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
         }
 
         .stats-grid {
@@ -105,7 +127,7 @@
             flex-wrap: wrap;
         }
 
-        .refresh-btn, .export-btn, .add-btn {
+        .refresh-btn, .export-btn, .add-btn, .sync-btn {
             background: linear-gradient(135deg, #734214, #8B7355);
             color: white;
             border: none;
@@ -119,13 +141,17 @@
             gap: 8px;
         }
 
-        .refresh-btn:hover, .export-btn:hover, .add-btn:hover {
+        .refresh-btn:hover, .export-btn:hover, .add-btn:hover, .sync-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(115, 66, 20, 0.3);
         }
 
         .add-btn {
             background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .sync-btn {
+            background: linear-gradient(135deg, #007bff, #0056b3);
         }
 
         .rsvp-filters {
@@ -329,6 +355,10 @@
             <p class="admin-subtitle">Edannoir & Kristine</p>
         </div>
 
+        <div id="connectionStatus" class="connection-status">
+            Checking connection to server...
+        </div>
+
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-number" id="totalRSVPs">0</div>
@@ -354,6 +384,9 @@
             <div class="action-buttons">
                 <button class="refresh-btn" onclick="loadRSVPData()">
                     <i class="fas fa-sync-alt"></i> Refresh Data
+                </button>
+                <button class="sync-btn" onclick="syncWithServer()">
+                    <i class="fas fa-cloud-upload-alt"></i> Sync with Server
                 </button>
                 <button class="export-btn" onclick="exportToCSV()">
                     <i class="fas fa-download"></i> Export to CSV
@@ -418,29 +451,108 @@
     <script>
         let allRSVPs = [];
         let currentFilter = 'all';
+        let serverConnected = false;
 
-        // Initialize Netlify DB
-        const db = window.netlifyIdentity ? window.netlifyIdentity : null;
+        // Check server connection
+        async function checkServerConnection() {
+            try {
+                const response = await fetch('/.netlify/functions/api/health');
+                if (response.ok) {
+                    serverConnected = true;
+                    updateConnectionStatus('Connected to server', 'connected');
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                serverConnected = false;
+                updateConnectionStatus('Server not available - using local storage', 'error');
+            }
+        }
 
-        // Load RSVP data from Netlify function API
+        // Update connection status
+        function updateConnectionStatus(message, type) {
+            const statusDiv = document.getElementById('connectionStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = `connection-status ${type}`;
+        }
+
+        // Load RSVP data
         async function loadRSVPData() {
             try {
-                const response = await fetch('/.netlify/functions/api/rsvp/all');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                if (serverConnected) {
+                    // Try to load from server
+                    const response = await fetch('/.netlify/functions/api/rsvp/all');
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success) {
+                            allRSVPs = data.rsvps || [];
+                            // Save to localStorage as backup
+                            localStorage.setItem('weddingRSVPs', JSON.stringify(allRSVPs));
+                        } else {
+                            throw new Error(data.message || 'Server error');
+                        }
+                    } else {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                } else {
+                    // Load from localStorage
+                    const storedData = localStorage.getItem('weddingRSVPs');
+                    if (storedData) {
+                        allRSVPs = JSON.parse(storedData);
+                    } else {
+                        allRSVPs = [];
+                    }
                 }
-                const data = await response.json();
                 
-                if (data.success) {
-                    allRSVPs = data.rsvps || [];
+                updateStats();
+                displayRSVPs();
+            } catch (error) {
+                console.error('Error loading RSVP data:', error);
+                // Fallback to localStorage
+                const storedData = localStorage.getItem('weddingRSVPs');
+                if (storedData) {
+                    allRSVPs = JSON.parse(storedData);
                     updateStats();
                     displayRSVPs();
                 } else {
-                    throw new Error(data.message || 'Failed to load RSVP data');
+                    showError('Error loading RSVP data');
                 }
+            }
+        }
+
+        // Sync with server
+        async function syncWithServer() {
+            if (!serverConnected) {
+                alert('Server not available. Cannot sync.');
+                return;
+            }
+
+            try {
+                // Get all local RSVPs
+                const localRSVPs = JSON.parse(localStorage.getItem('weddingRSVPs') || '[]');
+                
+                // Send each RSVP to server
+                for (const rsvp of localRSVPs) {
+                    await fetch('/.netlify/functions/api/rsvp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            name: rsvp.name,
+                            email: rsvp.email,
+                            guests: rsvp.guests,
+                            attending: rsvp.attending,
+                            message: rsvp.message
+                        })
+                    });
+                }
+                
+                alert('Sync completed!');
+                loadRSVPData();
             } catch (error) {
-                console.error('Error loading RSVP data:', error);
-                showError(`Error connecting to server: ${error.message}`);
+                console.error('Sync error:', error);
+                alert('Sync failed: ' + error.message);
             }
         }
 
@@ -569,39 +681,56 @@
             
             const formData = new FormData(e.target);
             const rsvpData = {
+                id: Date.now().toString(),
                 name: formData.get('name'),
                 email: formData.get('email'),
                 guests: parseInt(formData.get('guests')),
                 attending: formData.get('attending'),
-                message: formData.get('message') || ''
+                message: formData.get('message') || '',
+                timestamp: new Date().toISOString(),
+                source: 'manual'
             };
 
             try {
-                const response = await fetch('/.netlify/functions/api/rsvp', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(rsvpData)
-                });
+                if (serverConnected) {
+                    // Try to save to server first
+                    const response = await fetch('/.netlify/functions/api/rsvp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            name: rsvpData.name,
+                            email: rsvpData.email,
+                            guests: rsvpData.guests,
+                            attending: rsvpData.attending,
+                            message: rsvpData.message
+                        })
+                    });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
                 }
 
-                const result = await response.json();
+                // Always save to localStorage as backup
+                allRSVPs.push(rsvpData);
+                localStorage.setItem('weddingRSVPs', JSON.stringify(allRSVPs));
                 
-                if (result.success) {
-                    // Reload the data to get the updated list
-                    await loadRSVPData();
-                    closeAddModal();
-                    alert('RSVP added successfully!');
-                } else {
-                    throw new Error(result.message || 'Failed to add RSVP');
-                }
+                updateStats();
+                displayRSVPs();
+                closeAddModal();
+                
+                alert('RSVP added successfully!');
             } catch (error) {
                 console.error('Error adding RSVP:', error);
-                alert(`Error adding RSVP: ${error.message}`);
+                // Still save locally even if server fails
+                allRSVPs.push(rsvpData);
+                localStorage.setItem('weddingRSVPs', JSON.stringify(allRSVPs));
+                updateStats();
+                displayRSVPs();
+                closeAddModal();
+                alert('RSVP added to local storage (server unavailable)');
             }
         });
 
@@ -619,11 +748,14 @@
             }
         }
 
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async function() {
+            await checkServerConnection();
+            await loadRSVPData();
+        });
+
         // Auto-refresh every 30 seconds
         setInterval(loadRSVPData, 30000);
-
-        // Load data on page load
-        document.addEventListener('DOMContentLoaded', loadRSVPData);
     </script>
 </body>
 </html> 

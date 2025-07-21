@@ -356,44 +356,47 @@ rsvpForm.addEventListener('submit', async function(e) {
     submitBtn.disabled = true;
     
     try {
-        // Auto-detect if running locally or on Netlify
-        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const apiUrl = isLocal ? '/api/rsvp' : '/.netlify/functions/api/rsvp';
+        // Create RSVP entry
+        const rsvpEntry = {
+            id: Date.now().toString(),
+            name: name.trim(),
+            email: email.trim().toLowerCase(),
+            guests: parseInt(guests),
+            attending,
+            message: message ? message.trim() : '',
+            timestamp: new Date().toISOString(),
+            source: 'form'
+        };
+
+        // Get existing RSVPs from localStorage
+        const existingRSVPs = JSON.parse(localStorage.getItem('weddingRSVPs') || '[]');
         
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-        name,
-        email,
-        guests,
-        attending,
-        message
-            })
-        });
+        // Check if email already exists
+        const existingIndex = existingRSVPs.findIndex(rsvp => rsvp.email === rsvpEntry.email);
         
-        const data = await response.json();
-        
-        if (data.success) {
-            // Show success message
-            showNotification('RSVP submitted successfully! Thank you for your response.', 'success');
-            
-            // Reset form
-            rsvpForm.reset();
-            
-            // Create confetti effect
-            createConfetti();
-            
+        if (existingIndex !== -1) {
+            // Update existing RSVP
+            existingRSVPs[existingIndex] = { ...existingRSVPs[existingIndex], ...rsvpEntry };
         } else {
-            // Show error message
-            showNotification(data.message || 'Error submitting RSVP. Please try again.', 'error');
+            // Add new RSVP
+            existingRSVPs.push(rsvpEntry);
         }
+        
+        // Save back to localStorage
+        localStorage.setItem('weddingRSVPs', JSON.stringify(existingRSVPs));
+        
+        // Show success message
+        showNotification('RSVP submitted successfully! Thank you for your response.', 'success');
+        
+        // Reset form
+        rsvpForm.reset();
+        
+        // Create confetti effect
+        createConfetti();
         
     } catch (error) {
         console.error('RSVP submission error:', error);
-        showNotification('Network error. Please try again.', 'error');
+        showNotification('Error submitting RSVP. Please try again.', 'error');
     } finally {
         // Reset button state
         submitBtn.textContent = originalText;

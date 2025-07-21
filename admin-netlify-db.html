@@ -422,25 +422,22 @@
         // Initialize Netlify DB
         const db = window.netlifyIdentity ? window.netlifyIdentity : null;
 
-        // Load RSVP data from Netlify function API
+        // Load RSVP data from localStorage (temporary until Netlify DB is set up)
         async function loadRSVPData() {
             try {
-                const response = await fetch('/.netlify/functions/api/rsvp/all');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                
-                if (data.success) {
-                    allRSVPs = data.rsvps || [];
-                    updateStats();
-                    displayRSVPs();
+                // For now, use localStorage. Later we'll connect to Netlify DB
+                const storedData = localStorage.getItem('weddingRSVPs');
+                if (storedData) {
+                    allRSVPs = JSON.parse(storedData);
                 } else {
-                    throw new Error(data.message || 'Failed to load RSVP data');
+                    allRSVPs = [];
                 }
+                
+                updateStats();
+                displayRSVPs();
             } catch (error) {
                 console.error('Error loading RSVP data:', error);
-                showError(`Error connecting to server: ${error.message}`);
+                showError('Error loading RSVP data');
             }
         }
 
@@ -564,45 +561,30 @@
         }
 
         // Add RSVP form submission
-        document.getElementById('addRSVPForm').addEventListener('submit', async function(e) {
+        document.getElementById('addRSVPForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const formData = new FormData(e.target);
             const rsvpData = {
+                id: Date.now().toString(),
                 name: formData.get('name'),
                 email: formData.get('email'),
                 guests: parseInt(formData.get('guests')),
                 attending: formData.get('attending'),
-                message: formData.get('message') || ''
+                message: formData.get('message') || '',
+                timestamp: new Date().toISOString(),
+                source: 'manual'
             };
 
-            try {
-                const response = await fetch('/.netlify/functions/api/rsvp', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(rsvpData)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    // Reload the data to get the updated list
-                    await loadRSVPData();
-                    closeAddModal();
-                    alert('RSVP added successfully!');
-                } else {
-                    throw new Error(result.message || 'Failed to add RSVP');
-                }
-            } catch (error) {
-                console.error('Error adding RSVP:', error);
-                alert(`Error adding RSVP: ${error.message}`);
-            }
+            // Add to local storage (temporary)
+            allRSVPs.push(rsvpData);
+            localStorage.setItem('weddingRSVPs', JSON.stringify(allRSVPs));
+            
+            updateStats();
+            displayRSVPs();
+            closeAddModal();
+            
+            alert('RSVP added successfully!');
         });
 
         // Show error message

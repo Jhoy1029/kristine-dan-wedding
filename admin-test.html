@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Test - Wedding RSVP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #007cba;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #005a87;
+        }
+        .result {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wedding RSVP Admin Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Netlify Function</h2>
+        <button onclick="testHealth()">Test Health Endpoint</button>
+        <button onclick="testGetRSVPs()">Test Get RSVPs</button>
+        <button onclick="testAddRSVP()">Test Add RSVP</button>
+        <div id="testResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Current RSVPs</h2>
+        <button onclick="loadRSVPs()">Load RSVPs</button>
+        <div id="rsvpList" class="result"></div>
+    </div>
+
+    <script>
+        async function testHealth() {
+            try {
+                const response = await fetch('/.netlify/functions/api/health');
+                const data = await response.json();
+                document.getElementById('testResult').innerHTML = 
+                    `Status: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`;
+                document.getElementById('testResult').className = 'result success';
+            } catch (error) {
+                document.getElementById('testResult').innerHTML = 
+                    `Error: ${error.message}`;
+                document.getElementById('testResult').className = 'result error';
+            }
+        }
+
+        async function testGetRSVPs() {
+            try {
+                const response = await fetch('/.netlify/functions/api/rsvp/all');
+                const data = await response.json();
+                document.getElementById('testResult').innerHTML = 
+                    `Status: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`;
+                document.getElementById('testResult').className = 'result success';
+            } catch (error) {
+                document.getElementById('testResult').innerHTML = 
+                    `Error: ${error.message}`;
+                document.getElementById('testResult').className = 'result error';
+            }
+        }
+
+        async function testAddRSVP() {
+            try {
+                const testRSVP = {
+                    name: 'Test User',
+                    email: 'test@example.com',
+                    guests: 2,
+                    attending: 'yes',
+                    message: 'Test RSVP from admin'
+                };
+
+                const response = await fetch('/.netlify/functions/api/rsvp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testRSVP)
+                });
+
+                const data = await response.json();
+                document.getElementById('testResult').innerHTML = 
+                    `Status: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`;
+                document.getElementById('testResult').className = 'result success';
+            } catch (error) {
+                document.getElementById('testResult').innerHTML = 
+                    `Error: ${error.message}`;
+                document.getElementById('testResult').className = 'result error';
+            }
+        }
+
+        async function loadRSVPs() {
+            try {
+                const response = await fetch('/.netlify/functions/api/rsvp/all');
+                const data = await response.json();
+                
+                if (data.success && data.rsvps) {
+                    const rsvpList = data.rsvps.map(rsvp => 
+                        `${rsvp.name} (${rsvp.email}) - ${rsvp.attending === 'yes' ? 'Attending' : 'Not Attending'} - ${rsvp.guests} guests`
+                    ).join('\n');
+                    
+                    document.getElementById('rsvpList').innerHTML = 
+                        `Total RSVPs: ${data.rsvps.length}\n\n${rsvpList}`;
+                    document.getElementById('rsvpList').className = 'result success';
+                } else {
+                    document.getElementById('rsvpList').innerHTML = 
+                        `Error: ${data.message || 'Unknown error'}`;
+                    document.getElementById('rsvpList').className = 'result error';
+                }
+            } catch (error) {
+                document.getElementById('rsvpList').innerHTML = 
+                    `Error: ${error.message}`;
+                document.getElementById('rsvpList').className = 'result error';
+            }
+        }
+
+        // Test health on page load
+        window.onload = testHealth;
+    </script>
+</body>
+</html> 
