@@ -456,7 +456,7 @@
         // Check server connection
         async function checkServerConnection() {
             try {
-                const response = await fetch('/.netlify/functions/api/health');
+                const response = await fetch('/.netlify/functions/rsvp/health');
                 if (response.ok) {
                     serverConnected = true;
                     updateConnectionStatus('Connected to server', 'connected');
@@ -481,7 +481,7 @@
             try {
                 if (serverConnected) {
                     // Try to load from server
-                    const response = await fetch('/.netlify/functions/api/rsvp/all');
+                    const response = await fetch('/.netlify/functions/rsvp/all');
                     if (response.ok) {
                         const data = await response.json();
                         if (data.success) {
@@ -533,7 +533,7 @@
                 
                 // Send each RSVP to server
                 for (const rsvp of localRSVPs) {
-                    await fetch('/.netlify/functions/api/rsvp', {
+                    await fetch('/.netlify/functions/rsvp', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -694,7 +694,7 @@
             try {
                 if (serverConnected) {
                     // Try to save to server first
-                    const response = await fetch('/.netlify/functions/api/rsvp', {
+                    const response = await fetch('/.netlify/functions/rsvp', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

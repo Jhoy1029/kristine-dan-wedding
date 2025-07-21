@@ -357,7 +357,7 @@ rsvpForm.addEventListener('submit', async function(e) {
     
     try {
         // Send RSVP to Netlify function API
-        const response = await fetch('/.netlify/functions/api/rsvp', {
+        const response = await fetch('/.netlify/functions/rsvp', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

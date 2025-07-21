@@ -425,7 +425,7 @@
         // Load RSVP data from Netlify function API
         async function loadRSVPData() {
             try {
-                const response = await fetch('/.netlify/functions/api/rsvp/all');
+                const response = await fetch('/.netlify/functions/rsvp/all');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -577,7 +577,7 @@
             };
 
             try {
-                const response = await fetch('/.netlify/functions/api/rsvp', {
+                const response = await fetch('/.netlify/functions/rsvp', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
