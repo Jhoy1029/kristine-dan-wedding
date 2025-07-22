@@ -1,6 +1,10 @@
 const fs = require('fs');
+const path = require('path');
 
-// In-memory storage (backup)
+// Persistent storage file path
+const RSVP_FILE = '/tmp/rsvp_data.json';
+
+// Initialize data structure
 let rsvpData = {
     rsvps: [],
     stats: {
@@ -11,8 +15,32 @@ let rsvpData = {
     }
 };
 
-// Google Sheets Apps Script URL
-const GOOGLE_SHEETS_URL = process.env.GOOGLE_SHEETS_URL || '';
+// Load data from file
+function loadData() {
+    try {
+        if (fs.existsSync(RSVP_FILE)) {
+            const data = fs.readFileSync(RSVP_FILE, 'utf8');
+            rsvpData = JSON.parse(data);
+        } else {
+            // Initialize with empty data
+            saveData();
+        }
+    } catch (error) {
+        console.error('Error loading data:', error);
+        // Continue with empty data
+    }
+}
+
+// Save data to file
+function saveData() {
+    try {
+        fs.writeFileSync(RSVP_FILE, JSON.stringify(rsvpData, null, 2));
+        return true;
+    } catch (error) {
+        console.error('Error saving data:', error);
+        return false;
+    }
+}
 
 // Update statistics
 function updateStats() {
@@ -26,63 +54,8 @@ function updateStats() {
     return stats;
 }
 
-// Save to Google Sheets via Apps Script
-async function saveToGoogleSheets(rsvpEntry) {
-    try {
-        if (!GOOGLE_SHEETS_URL) {
-            console.log('Google Sheets URL not configured, skipping sheet save');
-            return true;
-        }
-
-        const response = await fetch(GOOGLE_SHEETS_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(rsvpEntry)
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            console.log('Saved to Google Sheets successfully:', result);
-            return true;
-        } else {
-            console.error('Failed to save to Google Sheets:', response.status);
-            return false;
-        }
-    } catch (error) {
-        console.error('Error saving to Google Sheets:', error);
-        return false;
-    }
-}
-
-// Save to local file as backup
-function saveToLocalFile() {
-    try {
-        const data = JSON.stringify(rsvpData, null, 2);
-        fs.writeFileSync('/tmp/rsvp_backup.json', data);
-        return true;
-    } catch (error) {
-        console.error('Error saving to local file:', error);
-        return false;
-    }
-}
-
-// Load from local file
-function loadFromLocalFile() {
-    try {
-        if (fs.existsSync('/tmp/rsvp_backup.json')) {
-            const data = fs.readFileSync('/tmp/rsvp_backup.json', 'utf8');
-            rsvpData = JSON.parse(data);
-            console.log('Loaded data from backup file');
-        }
-    } catch (error) {
-        console.error('Error loading from backup file:', error);
-    }
-}
-
-// Load data on startup
-loadFromLocalFile();
+// Load data on function initialization
+loadData();
 
 exports.handler = async function(event, context) {
     // Handle CORS
@@ -102,7 +75,7 @@ exports.handler = async function(event, context) {
     }
 
     try {
-        const path = event.path.replace('/.netlify/functions/rsvp', '');
+        const path = event.path.replace('/.netlify/functions/rsvp-persistent', '');
 
         // POST - Submit RSVP
         if (event.httpMethod === 'POST') {
@@ -146,13 +119,10 @@ exports.handler = async function(event, context) {
             // Update statistics
             updateStats();
 
-            // Save to multiple locations for backup
-            const savePromises = [
-                saveToGoogleSheets(rsvpEntry),
-                saveToLocalFile()
-            ];
-
-            const [sheetsSaved, localSaved] = await Promise.all(savePromises);
+            // Save to persistent storage
+            if (!saveData()) {
+                console.error('Failed to save data to file');
+            }
 
             return {
                 statusCode: 200,
@@ -160,9 +130,7 @@ exports.handler = async function(event, context) {
                 body: JSON.stringify({
                     success: true,
                     message: 'Thank you for your RSVP! We look forward to celebrating with you!',
-                    data: rsvpEntry,
-                    savedToSheets: sheetsSaved,
-                    savedLocally: localSaved
+                    data: rsvpEntry
                 })
             };
         }
@@ -177,7 +145,8 @@ exports.handler = async function(event, context) {
                     body: JSON.stringify({
                         success: true,
                         rsvps: rsvpData.rsvps,
-                        stats: rsvpData.stats
+                        stats: rsvpData.stats,
+                        totalCount: rsvpData.rsvps.length
                     })
                 };
             } else if (path === '/stats') {
@@ -200,7 +169,9 @@ exports.handler = async function(event, context) {
                         success: true,
                         message: 'RSVP API is running',
                         timestamp: new Date().toISOString(),
-                        rsvpCount: rsvpData.rsvps.length
+                        rsvpCount: rsvpData.rsvps.length,
+                        storageType: 'persistent',
+                        fileExists: fs.existsSync(RSVP_FILE)
                     })
                 };
             }

@@ -11,7 +11,7 @@ let rsvpData = {
     }
 };
 
-// Google Sheets Apps Script URL
+// Google Sheets Apps Script URL (replace with your actual URL)
 const GOOGLE_SHEETS_URL = process.env.GOOGLE_SHEETS_URL || '';
 
 // Update statistics
@@ -102,7 +102,7 @@ exports.handler = async function(event, context) {
     }
 
     try {
-        const path = event.path.replace('/.netlify/functions/rsvp', '');
+        const path = event.path.replace('/.netlify/functions/rsvp-with-sheets', '');
 
         // POST - Submit RSVP
         if (event.httpMethod === 'POST') {
@@ -177,7 +177,8 @@ exports.handler = async function(event, context) {
                     body: JSON.stringify({
                         success: true,
                         rsvps: rsvpData.rsvps,
-                        stats: rsvpData.stats
+                        stats: rsvpData.stats,
+                        totalCount: rsvpData.rsvps.length
                     })
                 };
             } else if (path === '/stats') {
@@ -198,9 +199,10 @@ exports.handler = async function(event, context) {
                     headers,
                     body: JSON.stringify({
                         success: true,
-                        message: 'RSVP API is running',
+                        message: 'RSVP API with Google Sheets backup is running',
                         timestamp: new Date().toISOString(),
-                        rsvpCount: rsvpData.rsvps.length
+                        rsvpCount: rsvpData.rsvps.length,
+                        googleSheetsConfigured: !!GOOGLE_SHEETS_URL
                     })
                 };
             }
