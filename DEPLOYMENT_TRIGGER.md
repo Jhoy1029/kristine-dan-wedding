@@ -17,4 +17,10 @@ This file was created to trigger a new deployment after adding the Google Sheets
 - Status: Ready for deployment
 - Function: rsvp.js (updated with Google Sheets integration)
 
-Deployment triggered on: $(date) 
+## Current Issue:
+- Site showing 404 errors
+- Need to trigger fresh deployment
+- Debug tools added for Google Sheets integration
+
+Deployment triggered on: $(date)
+Last updated: $(date) - Force redeploy to fix 404 issues 
