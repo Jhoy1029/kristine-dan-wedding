@@ -2556,10 +2556,23 @@ section.revealed {
 /* Timeline Sections Container */
 .timeline-sections-container {
     display: flex;
+    flex-direction: column;
     gap: 30px;
     max-width: 1400px;
     margin: 0 auto;
     padding: 40px 20px;
+}
+
+/* Ceremony Row Layout */
+.ceremony-row {
+    display: flex;
+    gap: 30px;
+    width: 100%;
+}
+
+.ceremony-row .ceremony-section {
+    flex: 1;
+    min-width: 0;
 }
 
 /* Ceremony Section */
@@ -2588,7 +2601,7 @@ section.revealed {
 .ceremony-timeline {
     max-width: 700px;
     margin: 0 auto;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.5) 100%), url('Assests/iti.jpg');
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.8) 100%), url('Assests/iti.jpg');
     background-size: cover;
     background-position: center;
     border-radius: 15px;
@@ -3936,6 +3949,11 @@ section.revealed {
         padding: 20px 10px;
     }
     
+    .ceremony-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
     .ceremony-timeline,
     .reception-timeline {
         max-width: 100%;
@@ -3992,7 +4010,7 @@ section.revealed {
 .reception-timeline {
     max-width: 700px;
     margin: 0 auto;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.5) 100%), url('Assests/iti.jpg');
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.8) 100%), url('Assests/iti.jpg');
     background-size: cover;
     background-position: center;
     border-radius: 15px;

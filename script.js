@@ -395,34 +395,34 @@ rsvpForm.addEventListener('submit', async function(e) {
         
         // Fallback to localStorage if server is unavailable
         try {
-            const rsvpEntry = {
-                id: Date.now().toString(),
-                name: name.trim(),
-                email: email.trim().toLowerCase(),
-                guests: parseInt(guests),
-                attending,
-                message: message ? message.trim() : '',
-                timestamp: new Date().toISOString(),
-                source: 'form'
-            };
+        const rsvpEntry = {
+            id: Date.now().toString(),
+            name: name.trim(),
+            email: email.trim().toLowerCase(),
+            guests: parseInt(guests),
+            attending,
+            message: message ? message.trim() : '',
+            timestamp: new Date().toISOString(),
+            source: 'form'
+        };
 
-            const existingRSVPs = JSON.parse(localStorage.getItem('weddingRSVPs') || '[]');
-            const existingIndex = existingRSVPs.findIndex(rsvp => rsvp.email === rsvpEntry.email);
-            
-            if (existingIndex !== -1) {
-                existingRSVPs[existingIndex] = { ...existingRSVPs[existingIndex], ...rsvpEntry };
-            } else {
-                existingRSVPs.push(rsvpEntry);
-            }
-            
-            localStorage.setItem('weddingRSVPs', JSON.stringify(existingRSVPs));
-            
+        const existingRSVPs = JSON.parse(localStorage.getItem('weddingRSVPs') || '[]');
+        const existingIndex = existingRSVPs.findIndex(rsvp => rsvp.email === rsvpEntry.email);
+        
+        if (existingIndex !== -1) {
+            existingRSVPs[existingIndex] = { ...existingRSVPs[existingIndex], ...rsvpEntry };
+        } else {
+            existingRSVPs.push(rsvpEntry);
+        }
+        
+        localStorage.setItem('weddingRSVPs', JSON.stringify(existingRSVPs));
+        
             showNotification('RSVP saved locally (server unavailable). We\'ll sync when possible.', 'info');
-            rsvpForm.reset();
-            createConfetti();
+        rsvpForm.reset();
+        createConfetti();
         } catch (localError) {
             console.error('Local storage error:', localError);
-            showNotification('Error submitting RSVP. Please try again.', 'error');
+        showNotification('Error submitting RSVP. Please try again.', 'error');
         }
     } finally {
         // Reset button state

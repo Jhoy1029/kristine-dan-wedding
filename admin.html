@@ -433,8 +433,8 @@
                 
                 if (data.success) {
                     allRSVPs = data.rsvps || [];
-                    updateStats();
-                    displayRSVPs();
+                updateStats();
+                displayRSVPs();
                 } else {
                     throw new Error(data.message || 'Failed to load RSVP data');
                 }
@@ -594,8 +594,8 @@
                 if (result.success) {
                     // Reload the data to get the updated list
                     await loadRSVPData();
-                    closeAddModal();
-                    alert('RSVP added successfully!');
+            closeAddModal();
+            alert('RSVP added successfully!');
                 } else {
                     throw new Error(result.message || 'Failed to add RSVP');
                 }
