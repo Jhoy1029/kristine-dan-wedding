@@ -2566,11 +2566,30 @@ section.revealed {
 /* Ceremony Row Layout */
 .ceremony-row {
     display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.ceremony-title-container {
+    text-align: center;
+}
+
+.ceremony-title-container .section-title {
+    margin-bottom: 0;
+}
+
+.reception-section .section-title {
+    margin-bottom: 0;
+}
+
+.ceremony-cards-row {
+    display: flex;
     gap: 30px;
     width: 100%;
 }
 
-.ceremony-row .ceremony-section {
+.ceremony-cards-row .ceremony-section {
     flex: 1;
     min-width: 0;
 }
@@ -2578,13 +2597,14 @@ section.revealed {
 /* Ceremony Section */
 .ceremony-section {
     background: none;
-    padding: 40px 0;
+    padding: 40px 0 0 0;
     position: relative;
     flex: 1;
 }
 
 .ceremony-section.revealed {
     padding-bottom: 0;
+    padding-top: 0;
 }
 
 .ceremony-section::before {
@@ -3950,6 +3970,11 @@ section.revealed {
     }
     
     .ceremony-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .ceremony-cards-row {
         flex-direction: column;
         gap: 20px;
     }
